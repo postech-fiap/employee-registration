@@ -8,7 +8,7 @@ type mySQLRepository struct {
 	client *sql.DB
 }
 
-//func NewMySQLRepository(client *sql.DB) port.EmployeeRepositoryInterface {
+//func NewMySQLRepository(client *sql.database) port.EmployeeRepositoryInterface {
 //	return &mySQLRepository{
 //		client: client,
 //	}
