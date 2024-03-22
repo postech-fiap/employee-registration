@@ -16,6 +16,7 @@ docker run \
   --network employee-registration-network \
   -p 3306:3306 \
   -d \
+  -v $(pwd)/migrations:/docker-entrypoint-initdb.d/ \
   -e MYSQL_ROOT_PASSWORD=123 \
   mysql:8.3.0
 ```

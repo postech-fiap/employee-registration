@@ -6,10 +6,14 @@ services:
     container_name: employee-registration-mysql
     image: mysql:8.3.0
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: 123
     ports:
       - "3306:3306"
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d/
+    networks:
+      - employee-registration-network
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
 
   rabbitmq:
     container_name: employee-registration-rabbitmq
@@ -18,17 +22,21 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - employee-registration-network
 
   api:
     container_name: employee-registration-api
-    build: .
     image: employee-registration-api:latest
+    build: .
     restart: always
     depends_on:
       - mysql
       - rabbitmq
     ports:
       - "8080:8080"
+    networks:
+      - employee-registration-network
     environment:
       MYSQL_HOST: employee-registration-mysql
       MYSQL_PORT: 3306
@@ -39,3 +47,7 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
+
+networks:
+  employee-registration-network:
+    driver: bridge
