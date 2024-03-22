@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-migration
+data:
+  initdb.sql: |
+    create database if not exists employee_registration;
+    use employee_registration;
+    CREATE TABLE IF NOT EXISTS `user` (
+      `id` bigint auto_increment,
+      `email` varchar(100) not null,
+      `username` varchar(36) not null,
+      `password` varchar(72) not null,
+      constraint pk_user primary key (id)
+    );
+    CREATE TABLE IF NOT EXISTS `employee` (
+      `id` bigint auto_increment,
+      `name` varchar(100) not null,
+      `user_id` bigint not null,
+      `position` enum('EMPLOYEE', 'MANAGER') not null,
+      `registration` varchar(10) not null,
+      constraint pk_employee primary key (id),
+      constraint fk_employee_user foreign key (user_id) references `user`(id) on delete restrict on update restrict
+    );
+    CREATE TABLE IF NOT EXISTS `register` (
+      `id` bigint auto_increment,
+      `date_time` timestamp not null,
+      `employee_id` bigint not null,
+      constraint pk_register primary key (id),
+      constraint fk_register_employee foreign key (employee_id) references `employee`(id) on delete restrict on update restrict
+    );
