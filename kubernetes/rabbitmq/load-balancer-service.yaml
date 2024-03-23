@@ -1,14 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: production-rabbitmq-load-balancer
+  name: employee-registration-rabbitmq-load-balancer
   labels:
-    app: production-rabbitmq-load-balancer
+    app: employee-registration-rabbitmq-load-balancer
 spec:
   type: LoadBalancer
   selector:
-    app: production-rabbitmq
+    app: employee-registration-rabbitmq
   ports:
-    - protocol: TCP
-      port: 80
+    - name: "admin"
+      protocol: TCP
+      port: 15672
       targetPort: 15672
+    - name: "service"
+      protocol: TCP
+      port: 5672
+      targetPort: 5672

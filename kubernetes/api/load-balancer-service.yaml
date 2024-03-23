@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: production-api-load-balancer
+  name: employee-registration-api-load-balancer
   labels:
-    app: production-api-load-balancer
+    app: employee-registration-api-load-balancer
 spec:
   type: LoadBalancer
   selector:
-    app: production-api
+    app: employee-registration-api
   ports:
     - protocol: TCP
       port: 8080
