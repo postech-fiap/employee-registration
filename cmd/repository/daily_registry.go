@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/postech-fiap/employee-registration/internal/core/dto"
+	"github.com/postech-fiap/employee-registration/internal/core/domain/entity"
 	"github.com/postech-fiap/employee-registration/internal/core/port"
 	"time"
 )
@@ -11,11 +11,11 @@ type registerDayRepository struct {
 	db *sql.DB
 }
 
-func NewFindRegisterDayByUserIdRepository(db *sql.DB) port.FindAllRegisterDayRepository {
+func NewFindRegisterDayByUserIdRepository(db *sql.DB) port.FindAllDailyRegistryRepository {
 	return registerDayRepository{db: db}
 }
 
-func (r registerDayRepository) FindAllRegisterDayByUserId(userId uint64) (*dto.RegisterDay, error) {
+func (r registerDayRepository) FindAllDailyRegistry(userId uint64) (*entity.DailyRegistry, error) {
 	query := `SELECT e.name 
 		,e.position
      	,r.date_time 
@@ -23,7 +23,8 @@ func (r registerDayRepository) FindAllRegisterDayByUserId(userId uint64) (*dto.R
 	INNER JOIN employee e ON e.id = r.employee_id
 	INNER JOIN user u ON u.id = e.user_id
 	WHERE u.id = ?
-	AND DAY(r.date_time) = DAY(CURDATE())`
+	AND DAY(r.date_time) = DAY(CURDATE())
+	ORDER BY r.date_time`
 
 	rows, err := r.db.Query(query, userId)
 
@@ -31,7 +32,7 @@ func (r registerDayRepository) FindAllRegisterDayByUserId(userId uint64) (*dto.R
 		return nil, err
 	}
 
-	registersDay := &dto.RegisterDay{}
+	registersDay := &entity.DailyRegistry{}
 
 	for rows.Next() {
 		register := time.Time{}.String()
@@ -39,7 +40,7 @@ func (r registerDayRepository) FindAllRegisterDayByUserId(userId uint64) (*dto.R
 		if err != nil {
 			return nil, err
 		}
-		registersDay.Registers = append(registersDay.Registers, register)
+		registersDay.DailyRegistry = append(registersDay.DailyRegistry, register)
 	}
 
 	return registersDay, nil

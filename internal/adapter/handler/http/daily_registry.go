@@ -8,16 +8,16 @@ import (
 	"net/http"
 )
 
-type FindAllRegisterDayHandler struct {
-	useCase port.FindAllRegisterDayUseCase
+type FindAllDailyRegistryHandler struct {
+	useCase port.FindAllDailyRegistryUseCase
 }
 
-func NewFindRegisterDayByUserIdHandler(useCase port.FindAllRegisterDayUseCase) *FindAllRegisterDayHandler {
-	return &FindAllRegisterDayHandler{useCase: useCase}
+func NewFindAllDailyRegisterHandler(useCase port.FindAllDailyRegistryUseCase) *FindAllDailyRegistryHandler {
+	return &FindAllDailyRegistryHandler{useCase: useCase}
 }
 
-func (h *FindAllRegisterDayHandler) Handle(c *gin.Context) {
-	var requestURIParams dto.FindAllRegisterRequestURI
+func (h *FindAllDailyRegistryHandler) Handle(c *gin.Context) {
+	var requestURIParams dto.FindDailyRegistryRequestURI
 
 	err := c.ShouldBindUri(&requestURIParams)
 
@@ -26,12 +26,12 @@ func (h *FindAllRegisterDayHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	registers, err := h.useCase.FindAllRegisterDayByUserId(requestURIParams.UserId)
+	dailyRegisters, err := h.useCase.FindAllDailyRegistry(requestURIParams.UserId)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, registers)
+	c.JSON(http.StatusOK, dailyRegisters)
 }

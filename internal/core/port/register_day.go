@@ -1,11 +1,13 @@
 package port
 
-import "github.com/postech-fiap/employee-registration/internal/core/dto"
+import (
+	"github.com/postech-fiap/employee-registration/internal/core/domain/entity"
+)
 
-type FindAllRegisterDayRepository interface {
-	FindAllRegisterDayByUserId(userId uint64) (*dto.RegisterDay, error)
+type FindAllDailyRegistryRepository interface {
+	FindAllDailyRegistry(userId uint64) (*entity.DailyRegistry, error)
 }
 
-type FindAllRegisterDayUseCase interface {
-	FindAllRegisterDayByUserId(userId uint64) (*dto.RegisterDay, error)
+type FindAllDailyRegistryUseCase interface {
+	FindAllDailyRegistry(userId uint64) (*entity.DailyRegistry, error)
 }
