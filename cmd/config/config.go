@@ -40,11 +40,11 @@ func NewConfig() (*Config, error) {
 		return nil, err
 	}
 
-	config.Database.Host = "localhost"
-	config.Database.Port = "3307"
-	config.Database.Username = "root"
-	config.Database.Password = "12345"
-	config.Database.Schema = "employee_registration"
+	config.Database.Host = os.Getenv("MYSQL_HOST")
+	config.Database.Port = os.Getenv("MYSQL_PORT")
+	config.Database.Username = os.Getenv("MYSQL_USERNAME")
+	config.Database.Password = os.Getenv("MYSQL_PASSWORD")
+	config.Database.Schema = os.Getenv("MYSQL_SCHEMA")
 
 	config.RabbitMQ.Host = os.Getenv("RABBITMQ_HOST")
 	config.RabbitMQ.Port = os.Getenv("RABBITMQ_PORT")
