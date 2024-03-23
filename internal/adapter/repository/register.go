@@ -39,7 +39,7 @@ func (r registerRepository) FindAllDailyRegistry(userId uint64) (*entity.DailyRe
 	registersDay := &entity.DailyRegistry{}
 
 	for rows.Next() {
-		register := time.Time{}.String()
+		register := time.Time{}
 		err = rows.Scan(&registersDay.Name, &registersDay.Position, &register)
 		if err != nil {
 			return nil, err
