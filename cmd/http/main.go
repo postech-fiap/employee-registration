@@ -27,6 +27,7 @@ func main() {
 		panic(err)
 	}
 	defer repositoryAdapter.CloseConnection()
+	findRegisterDayByUserIdRepository := repository.NewFindRegisterDayByUserIdRepository(conn)
 	registerRepository := repository.NewRegisterRepository(conn)
 
 	//amqp
@@ -40,12 +41,13 @@ func main() {
 	registerQueuePublisher := publisher.NewRegisterQueuePublisher(AMQPChannel)
 
 	// usecase
-
+	findRegisterDayByUserIdUseCase := usecase.FindAllRegisterDayByUserIdUseCase(findRegisterDayByUserIdRepository)
 	registerUseCase := usecase.NewRegisterUseCase(registerRepository, registerQueuePublisher)
 
 	// service
 	pingService := http.NewPingService()
 	registerService := http.NewRegisterService(registerUseCase)
+	dailyRegistryHandler := http.NewFindAllDailyRegisterHandler(findRegisterDayByUserIdUseCase)
 
 	// queue consumer
 	orderQueueConsumer := consumer.NewRegisterQueueConsumer(AMQPChannel, registerUseCase)
@@ -54,6 +56,7 @@ func main() {
 	router := gin.New()
 	router.Use(middlewares.ErrorService)
 	router.GET("/ping", pingService.Ping)
+	router.GET("/register", dailyRegistryHandler.Handle)
 	router.POST("/register", registerService.Register)
 
 	address := fmt.Sprintf("%s:%s", configuration.Server.Host, configuration.Server.Port)
