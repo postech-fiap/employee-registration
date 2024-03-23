@@ -25,6 +25,14 @@ type Config struct {
 		Username string
 		Password string
 	}
+
+	SMTP struct {
+		Host     string
+		Port     string
+		Username string
+		Password string
+		From     string
+	}
 }
 
 func NewConfig() (*Config, error) {
@@ -50,6 +58,12 @@ func NewConfig() (*Config, error) {
 	config.RabbitMQ.Port = os.Getenv("RABBITMQ_PORT")
 	config.RabbitMQ.Username = os.Getenv("RABBITMQ_USERNAME")
 	config.RabbitMQ.Password = os.Getenv("RABBITMQ_PASSWORD")
+
+	config.SMTP.Host = os.Getenv("SMTP_HOST")
+	config.SMTP.Port = os.Getenv("SMTP_PORT")
+	config.SMTP.Username = os.Getenv("SMTP_USERNAME")
+	config.SMTP.Password = os.Getenv("SMTP_PASSWORD")
+	config.SMTP.From = os.Getenv("SMTP_FROM")
 
 	return config, nil
 }

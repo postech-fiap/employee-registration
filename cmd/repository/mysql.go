@@ -11,7 +11,7 @@ var connection *sql.DB = nil
 
 func OpenConnection(config *config.Config) (*sql.DB, error) {
 	db, err := sql.Open("mysql",
-		fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+		fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 			config.Database.Username,
 			config.Database.Password,
 			config.Database.Host,

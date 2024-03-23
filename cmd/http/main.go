@@ -27,6 +27,9 @@ func main() {
 		panic(err)
 	}
 	defer repositoryAdapter.CloseConnection()
+
+	emailRepository := repository.NewEmailRepository(configuration)
+	mirrorRepository := repository.NewMirrorRepository(conn)
 	findRegisterDayByUserIdRepository := repository.NewFindRegisterDayByUserIdRepository(conn)
 	registerRepository := repository.NewRegisterRepository(conn)
 
@@ -41,11 +44,14 @@ func main() {
 	registerQueuePublisher := publisher.NewRegisterQueuePublisher(AMQPChannel)
 
 	// usecase
+	mirrorUseCase := usecase.NewMirrorUseCase(mirrorRepository)
+	reportUseCase := usecase.NewReportUseCase(mirrorUseCase, emailRepository)
 	registerUseCase := usecase.NewRegisterUseCase(registerRepository, registerQueuePublisher)
 	findRegisterDayByUserIdUseCase := usecase.FindAllRegisterDayByUserIdUseCase(findRegisterDayByUserIdRepository)
 
 	// service
 	pingService := http.NewPingService()
+	reportHandler := http.NewReportHandler(reportUseCase)
 	registerService := http.NewRegisterService(registerUseCase)
 	dailyRegistryHandler := http.NewFindAllDailyRegisterHandler(findRegisterDayByUserIdUseCase)
 
@@ -56,6 +62,7 @@ func main() {
 	router := gin.New()
 	router.Use(middlewares.ErrorService)
 	router.GET("/ping", pingService.Ping)
+	router.GET("/report", reportHandler.Handle)
 	router.GET("/register", dailyRegistryHandler.Handle)
 	router.POST("/register", registerService.Register)
 
