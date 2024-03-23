@@ -1,5 +1,5 @@
 package dto
 
-type FindDailyRegistryRequestURI struct {
-	UserId uint64 `uri:"id" binding:"required,gt=0"`
+type FindDailyRegistryHeaders struct {
+	UserId uint64 `header:"user-id" binding:"required"`
 }

@@ -17,16 +17,15 @@ func NewFindAllDailyRegisterHandler(useCase port.FindAllDailyRegistryUseCase) *F
 }
 
 func (h *FindAllDailyRegistryHandler) Handle(c *gin.Context) {
-	var requestURIParams dto.FindDailyRegistryRequestURI
-
-	err := c.ShouldBindUri(&requestURIParams)
+	var headers dto.FindDailyRegistryHeaders
+	err := c.ShouldBindHeader(&headers)
 
 	if err != nil {
-		c.Error(exception.NewInvalidDataException("invalid param user_id", err))
+		c.Error(exception.NewInvalidDataException("invalid header", err))
 		return
 	}
 
-	dailyRegisters, err := h.useCase.FindAllDailyRegistry(requestURIParams.UserId)
+	dailyRegisters, err := h.useCase.FindAllDailyRegistry(headers.UserId)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())

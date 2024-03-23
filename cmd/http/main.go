@@ -48,7 +48,7 @@ func main() {
 	router := gin.New()
 	router.Use(middlewares.ErrorService)
 	router.GET("/ping", pingService.Ping)
-	router.GET("/user/:id/register", dailyRegistryHandler.Handle)
+	router.GET("/register", dailyRegistryHandler.Handle)
 
 	address := fmt.Sprintf("%s:%s", configuration.Server.Host, configuration.Server.Port)
 	router.Run(address)
