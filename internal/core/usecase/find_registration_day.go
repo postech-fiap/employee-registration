@@ -19,17 +19,15 @@ func (r registerDayUseCase) FindAllDailyRegistry(userId uint64) (*entity.DailyRe
 	var hours time.Duration
 
 	register, err := r.repository.FindAllDailyRegistry(userId)
-
 	if err != nil {
 		return nil, err
 	}
 
 	for i, register := range register.DailyRegistry {
-		registerParsed, _ := time.Parse("2006-01-02 15:4:5", register)
-		if !before.IsZero() && before.Compare(registerParsed) == -1 && (i+1)%2 == 0 {
-			hours += registerParsed.Sub(before)
+		if !before.IsZero() && before.Compare(register) == -1 && (i+1)%2 == 0 {
+			hours += register.Sub(before)
 		}
-		before = registerParsed
+		before = register
 	}
 	register.Hours = hours.String()
 
