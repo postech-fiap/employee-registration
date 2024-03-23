@@ -1,23 +1,25 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: production-mongo
+  name: employee-registration-mysql
   labels:
-    app: production-mongo
+    app: employee-registration-mysql
 spec:
   containers:
-    - name: production-mongo
-      image: mongo:6.0.13
+    - name: employee-registration-mysql
+      image: mysql:8.3.0
       ports:
-        - containerPort: 27017
+        - containerPort: 3306
+      volumeMounts:
+        - mountPath: /docker-entrypoint-initdb.d/
+          name: migration
       env:
-        - name: MONGO_INITDB_ROOT_USERNAME
+        - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: production-mongo
-              key: username
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: production-mongo
+              name: employee-registration-mysql
               key: password
+  volumes:
+    - name: migration
+      configMap:
+        name: mysql-migration

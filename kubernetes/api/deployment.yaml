@@ -1,53 +1,80 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: production-api-deployment
+  name: employee-registration-api-deployment
   labels:
-    app: production-api-deployment
+    app: employee-registration-api-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: production-api
+      app: employee-registration-api
   template:
     metadata:
       labels:
-        app: production-api
+        app: employee-registration-api
     spec:
       containers:
-        - name: production-api
-          image: gabrielgarciasp/production-api:latest
+        - name: employee-registration-api
+          image: gabrielgarciasp/employee-registration-api:latest
           ports:
             - containerPort: 80
           env:
-            - name: MONGO_HOST
-              value: "production-mongo-service"
-            - name: MONGO_PORT
-              value: "27017"
-            - name: MONGO_USERNAME
+            - name: MYSQL_HOST
+              value: "employee-registration-mysql-service"
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: production-mongo
+                  name: employee-registration-mysql
                   key: username
-            - name: MONGO_PASSWORD
+            - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: production-mongo
+                  name: employee-registration-mysql
                   key: password
+            - name: MYSQL_SCHEMA
+              value: "employee_registration"
             - name: RABBITMQ_HOST
-              value: "production-rabbitmq-service"
+              value: "employee-registration-rabbitmq-service"
             - name: RABBITMQ_PORT
               value: "5672"
             - name: RABBITMQ_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: production-rabbitmq
+                  name: employee-registration-rabbitmq
                   key: username
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: production-rabbitmq
+                  name: employee-registration-rabbitmq
                   key: password
+            - name: SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: host
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: port
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: username
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: password
+            - name: SMTP_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: from
           readinessProbe:
             httpGet:
               path: /ping
