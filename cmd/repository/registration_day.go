@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/postech-fiap/employee-registration/internal/core/dto"
 	"github.com/postech-fiap/employee-registration/internal/core/port"
+	"time"
 )
 
 type registerDayRepository struct {
@@ -14,7 +15,7 @@ func NewFindRegisterDayByUserIdRepository(db *sql.DB) port.FindAllRegisterDayRep
 	return registerDayRepository{db: db}
 }
 
-func (r registerDayRepository) FindAllRegisterDayByUserId(userId uint64) []dto.RegisterDay {
+func (r registerDayRepository) FindAllRegisterDayByUserId(userId uint64) (*dto.RegisterDay, error) {
 	query := `SELECT e.name 
 		,e.position
      	,r.date_time 
@@ -24,25 +25,22 @@ func (r registerDayRepository) FindAllRegisterDayByUserId(userId uint64) []dto.R
 	WHERE u.id = ?
 	AND DAY(r.date_time) = DAY(CURDATE())`
 
-	var registerDayByUser []dto.RegisterDay
 	rows, err := r.db.Query(query, userId)
 
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
+
+	registersDay := &dto.RegisterDay{}
 
 	for rows.Next() {
-		var name string
-		var position string
-		var dateTime string
-
-		err = rows.Scan(&name, &position, &dateTime)
+		register := time.Time{}.String()
+		err = rows.Scan(&registersDay.Name, &registersDay.Position, &register)
 		if err != nil {
-			panic(err.Error())
+			return nil, err
 		}
-
-		registerDayByUser = append(registerDayByUser, dto.RegisterDay{Name: name, Position: position, DateTime: dateTime})
+		registersDay.Registers = append(registersDay.Registers, register)
 	}
 
-	return registerDayByUser
+	return registersDay, nil
 }

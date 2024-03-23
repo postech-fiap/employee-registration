@@ -26,5 +26,12 @@ func (h *FindAllRegisterDayHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, h.useCase.FindAllRegisterDayByUserId(requestURIParams.UserId))
+	registers, err := h.useCase.FindAllRegisterDayByUserId(requestURIParams.UserId)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, registers)
 }
