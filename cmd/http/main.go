@@ -41,8 +41,8 @@ func main() {
 	registerQueuePublisher := publisher.NewRegisterQueuePublisher(AMQPChannel)
 
 	// usecase
-	findRegisterDayByUserIdUseCase := usecase.FindAllRegisterDayByUserIdUseCase(findRegisterDayByUserIdRepository)
 	registerUseCase := usecase.NewRegisterUseCase(registerRepository, registerQueuePublisher)
+	findRegisterDayByUserIdUseCase := usecase.FindAllRegisterDayByUserIdUseCase(findRegisterDayByUserIdRepository)
 
 	// service
 	pingService := http.NewPingService()
