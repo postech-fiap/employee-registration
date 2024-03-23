@@ -27,7 +27,7 @@ func main() {
 		panic(err)
 	}
 	defer repositoryAdapter.CloseConnection()
-	reportRepository := repository.NewReportRepository(conn)
+	registerRepository := repository.NewReportRepository(conn)
 
 	//amqp
 	AMQPChannel, err := amqp.OpenConnection(configuration)
@@ -41,7 +41,7 @@ func main() {
 
 	// usecase
 
-	registerUseCase := usecase.NewRegisterUseCase(reportRepository, registerQueuePublisher)
+	registerUseCase := usecase.NewRegisterUseCase(registerRepository, registerQueuePublisher)
 
 	// service
 	pingService := http.NewPingService()
