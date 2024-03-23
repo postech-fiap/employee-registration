@@ -7,6 +7,7 @@ import (
 	"github.com/postech-fiap/employee-registration/cmd/repository"
 	"github.com/postech-fiap/employee-registration/internal/adapter/handler/http"
 	"github.com/postech-fiap/employee-registration/internal/adapter/handler/http/middlewares"
+	"github.com/postech-fiap/employee-registration/internal/core/usecase"
 )
 
 func main() {
@@ -17,11 +18,12 @@ func main() {
 	}
 
 	// repository
-	_, err = repository.OpenConnection(configuration)
+	conn, err := repository.OpenConnection(configuration)
 	if err != nil {
 		panic(err)
 	}
 	defer repository.CloseConnection()
+	findRegisterDayByUserIdRepository := repository.NewFindRegisterDayByUserIdRepository(conn)
 
 	// amqp
 	//AMQPChannel, err := amqp.OpenConnection(configuration)
@@ -34,10 +36,11 @@ func main() {
 	// ...
 
 	// usecase
-	// ...
+	findRegisterDayByUserIdUseCase := usecase.FindAllRegisterDayByUserIdUseCase(findRegisterDayByUserIdRepository)
 
 	// service
 	pingService := http.NewPingService()
+	registerDayHandler := http.NewFindRegisterDayByUserIdHandler(findRegisterDayByUserIdUseCase)
 
 	// queue consumer
 	// ...
@@ -45,6 +48,7 @@ func main() {
 	router := gin.New()
 	router.Use(middlewares.ErrorService)
 	router.GET("/ping", pingService.Ping)
+	router.GET("/user/:id/register_day", registerDayHandler.Handle)
 
 	address := fmt.Sprintf("%s:%s", configuration.Server.Host, configuration.Server.Port)
 	router.Run(address)
