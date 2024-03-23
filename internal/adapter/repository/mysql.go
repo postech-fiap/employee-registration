@@ -10,7 +10,7 @@ type reportRepository struct {
 	db *sql.DB
 }
 
-func NewReportRepository(db *sql.DB) port.RegisterRepositoryInterface {
+func NewRegisterRepository(db *sql.DB) port.RegisterRepositoryInterface {
 	return reportRepository{db: db}
 }
 

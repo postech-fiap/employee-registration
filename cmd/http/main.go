@@ -27,7 +27,7 @@ func main() {
 		panic(err)
 	}
 	defer repositoryAdapter.CloseConnection()
-	registerRepository := repository.NewReportRepository(conn)
+	registerRepository := repository.NewRegisterRepository(conn)
 
 	//amqp
 	AMQPChannel, err := amqp.OpenConnection(configuration)
