@@ -50,6 +50,31 @@ spec:
                 secretKeyRef:
                   name: employee-registration-rabbitmq
                   key: password
+            - name: SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: host
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: port
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: username
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: password
+            - name: SMTP_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: employee-registration-smtp
+                  key: from
           readinessProbe:
             httpGet:
               path: /ping

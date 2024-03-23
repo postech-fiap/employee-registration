@@ -47,6 +47,11 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
+      SMTP_HOST=CHANGE: CHANGE
+      SMTP_PORT=CHANGE: CHANGE
+      SMTP_USERNAME=CHANGE: CHANGE
+      SMTP_PASSWORD=CHANGE: CHANGE
+      SMTP_FROM=CHANGE: CHANGE
 
 networks:
   employee-registration-network:

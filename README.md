@@ -2,6 +2,26 @@
 
 ## Build and Run
 
+## Manual
+
+Export the following environment variables
+```bash
+export MYSQL_HOST=employee-registration-mysql
+export MYSQL_PORT=3306
+export MYSQL_USERNAME=root
+export MYSQL_PASSWORD=123
+export MYSQL_SCHEMA=employee_registration
+export RABBITMQ_HOST=employee-registration-rabbitmq
+export RABBITMQ_PORT=5672
+export RABBITMQ_USERNAME=guest
+export RABBITMQ_PASSWORD=guest
+export SMTP_HOST=CHANGE
+export SMTP_PORT=CHANGE
+export SMTP_USERNAME=CHANGE
+export SMTP_PASSWORD=CHANGE
+export SMTP_FROM=CHANGE
+```
+
 ### Docker
 
 Network
@@ -53,6 +73,11 @@ docker run \
   -e RABBITMQ_PORT=5672 \
   -e RABBITMQ_USERNAME=guest \
   -e RABBITMQ_PASSWORD=guest \
+  -e SMTP_HOST=CHANGE \
+  -e SMTP_PORT=CHANGE \
+  -e SMTP_USERNAME=CHANGE \
+  -e SMTP_PASSWORD=CHANGE \
+  -e SMTP_FROM=CHANGE \
   employee-registration-api
 ```
 
@@ -75,6 +100,16 @@ kubectl create secret generic employee-registration-mysql \
 kubectl create secret generic employee-registration-rabbitmq \
   --from-literal=username=CHANGE_HERE \
   --from-literal=password=CHANGE_HERE
+```
+
+#### Secrets SMTP
+```bash
+kubectl create secret generic employee-registration-smtp \
+  --from-literal=host=CHANGE_HERE \
+  --from-literal=port=CHANGE_HERE \
+  --from-literal=username=CHANGE_HERE \
+  --from-literal=password=CHANGE_HERE \
+  --from-literal=from=CHANGE_HERE
 ```
 
 #### MySQL Pods and Services
